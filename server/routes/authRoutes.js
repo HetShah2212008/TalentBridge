@@ -23,7 +23,7 @@ router.post("/register", upload.single("cv"), async (req, res) => {
     phone,
     education,
     skills,
-    cv: req.file.path
+    cv: req.file ? req.file.path : ""
   });
 
   res.json(user);
@@ -31,17 +31,29 @@ router.post("/register", upload.single("cv"), async (req, res) => {
 
 // Login (Both roles)
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  try {
+    const { email, password } = req.body;
 
-  if (!user) return res.status(400).json("User not found");
+    const user = await User.findOne({ email });
 
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) return res.status(400).json("Wrong password");
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
 
-  const token = jwt.sign({ id: user._id, role: user.role }, "secretKey");
+    const isMatch = await bcrypt.compare(password, user.password);
 
-  res.json({ token, role: user.role });
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
+
+    res.json({
+      message: "Login successful",
+      user
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 module.exports = router;
