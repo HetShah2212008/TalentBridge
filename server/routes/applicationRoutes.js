@@ -49,4 +49,24 @@ res.status(500).json({message:"Error fetching applications"});
 
 });
 
+// UPDATE APPLICATION STATUS
+router.put("/status/:id", async (req,res)=>{
+
+try{
+
+const { status } = req.body;
+
+await Application.findByIdAndUpdate(req.params.id,{status});
+
+res.json({message:"Status updated successfully"});
+
+}catch(error){
+
+console.log(error);
+res.status(500).json({message:"Error updating status"});
+
+}
+
+});
+
 module.exports = router;

@@ -8,12 +8,32 @@ useEffect(()=>{
 
 fetch("http://localhost:5000/api/applications")
 .then(res=>res.json())
-.then(data=>{
-console.log(data);   // helps debug
-setApplications(data);
-});
+.then(data=>setApplications(data));
 
 },[]);
+
+
+// UPDATE STATUS
+const updateStatus = async (id,status)=>{
+
+await fetch(`http://localhost:5000/api/applications/status/${id}`,{
+
+method:"PUT",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({status})
+
+});
+
+alert("Status updated");
+
+window.location.reload();
+
+};
+
 
 return(
 
@@ -43,6 +63,14 @@ padding:"10px"
 <p><b>Email:</b> {app.email}</p>
 
 <p><b>Status:</b> {app.status}</p>
+
+<button onClick={()=>updateStatus(app._id,"Shortlisted")}>
+Shortlist
+</button>
+
+<button onClick={()=>updateStatus(app._id,"Rejected")}>
+Reject
+</button>
 
 </div>
 ))
