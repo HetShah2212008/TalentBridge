@@ -5,6 +5,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const recruiterRoutes = require("./routes/recruiterRoutes");
 const jobRoutes = require("./routes/jobRoutes");
+const applicationRoutes = require("./routes/applicationRoutes");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -27,6 +28,7 @@ app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/recruiter", recruiterRoutes);
 app.use("/api/jobs", jobRoutes);
+app.use("/api/applications", applicationRoutes);
 
 // Database Connection
 mongoose.connect("mongodb://127.0.0.1:27017/recruitmentDB")
